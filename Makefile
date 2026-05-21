@@ -35,7 +35,7 @@ push-packs-local:
 	@$(PYTHON) push_task_packs.py http://localhost:4000/ext_api/task_packs --hidden
 
 push-packs-private:
-	@$(PYTHON) push_task_packs.py https://codebattle.hexlet.io/ext_api/task_packs --hidden
+	@$(PYTHON) push_task_packs.py https://codebattle.hexlet.io/ext_api/task_packs --hidden --dir private/task_packs
 
 push-packs-public:
 	@$(PYTHON) push_task_packs.py https://codebattle.hexlet.io/ext_api/task_packs --public

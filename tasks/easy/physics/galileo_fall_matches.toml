@@ -1,0 +1,215 @@
+level             = "easy"
+name              = "galileo_fall_matches"
+tags              = ["physics", "experiments", "arrays"]
+time_to_solve_sec = 220
+
+description_en = """
+In a simplified Galileo fall experiment each record is `[mass1, height1, mass2, height2]`.
+
+In ideal vacuum, fall time depends only on height, not mass.
+Return how many records describe bodies that land at the same time.
+"""
+
+description_ru = """
+В упрощённом опыте Галилея каждая запись имеет вид `[mass1, height1, mass2, height2]`.
+
+В идеальном вакууме время падения зависит только от высоты, а не от массы.
+Верните количество записей, где тела приземлятся одновременно.
+"""
+
+limits = """
+- $0 \\leq \\text{len}(\\text{experiments}) \\leq 100$
+- $1 \\leq \\text{mass1}, \\text{mass2} \\leq 10^4$
+- $0 \\leq \\text{height1}, \\text{height2} \\leq 10^4$
+"""
+
+solution = """
+def solution(experiments):
+    return sum(e[1] == e[3] for e in experiments)
+"""
+
+examples = """
+solution([]) == 0
+solution([[1, 10, 5, 10]]) == 1
+solution([[1, 10, 5, 9], [3, 7, 8, 7]]) == 1
+"""
+
+[[input_signature]]
+argument_name = "experiments"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "array"
+[input_signature.type.nested.nested]
+name = "integer"
+
+[output_signature.type]
+name = "integer"
+
+[[asserts]]
+arguments = [[]]
+comment   = "No records"
+expected  = 0
+
+[[asserts]]
+arguments = [[[1, 10, 5, 10]]]
+comment   = "Equal heights with different masses"
+expected  = 1
+
+[[asserts]]
+arguments = [[[1, 10, 5, 9]]]
+comment   = "Different heights"
+expected  = 0
+
+[[asserts]]
+arguments = [[[2, 0, 9, 0]]]
+comment   = "Both dropped from ground level"
+expected  = 1
+
+[[asserts]]
+arguments = [[[4, 100, 4, 100], [9, 20, 1, 30]]]
+comment   = "One matching record"
+expected  = 1
+
+[[asserts]]
+arguments = [[[3, 8, 7, 8], [5, 12, 6, 12], [1, 2, 10, 3]]]
+comment   = "Two matching records"
+expected  = 2
+
+[[asserts]]
+arguments = [[[1, 1, 1, 2], [2, 3, 3, 4], [5, 5, 8, 6]]]
+comment   = "No equal heights"
+expected  = 0
+
+[[asserts]]
+arguments = [[[10, 500, 1, 500], [2, 1000, 9, 1000], [3, 1, 4, 2]]]
+comment   = "Large heights"
+expected  = 2
+
+[[asserts]]
+arguments = [[[6, 42, 7, 42], [8, 42, 9, 41], [10, 41, 11, 41]]]
+comment   = "Repeated heights"
+expected  = 2
+
+[[asserts]]
+arguments = [[[100, 9, 1, 9], [1, 9, 100, 10], [3, 10, 8, 10], [4, 11, 2, 12]]]
+comment   = "Mass does not matter"
+expected  = 2
+
+[[asserts]]
+arguments = [[[1, 9999, 2, 9999], [3, 10000, 4, 9999]]]
+comment   = "Upper edge heights"
+expected  = 1
+
+[[asserts]]
+arguments = [
+  [
+    [
+      5,
+      15,
+      6,
+      15,
+    ],
+    [
+      7,
+      16,
+      8,
+      16,
+    ],
+    [
+      9,
+      17,
+      10,
+      17,
+    ],
+    [
+      11,
+      18,
+      12,
+      19,
+    ],
+  ],
+]
+comment = "Mostly matching"
+expected = 3
+
+[[asserts]]
+arguments = [
+  [
+    [
+      1,
+      25,
+      2,
+      26,
+    ],
+    [
+      3,
+      26,
+      4,
+      25,
+    ],
+    [
+      5,
+      27,
+      6,
+      27,
+    ],
+    [
+      7,
+      28,
+      8,
+      29,
+    ],
+    [
+      9,
+      30,
+      10,
+      30,
+    ],
+  ],
+]
+comment = "Mixed sequence"
+expected = 2
+
+[[asserts]]
+arguments = [[[1, 0, 2, 1], [3, 1, 4, 1], [5, 2, 6, 3], [7, 4, 8, 4]]]
+comment   = "Includes zero height"
+expected  = 2
+
+[[asserts]]
+arguments = [
+  [
+    [
+      2,
+      77,
+      3,
+      77,
+    ],
+    [
+      4,
+      78,
+      5,
+      78,
+    ],
+    [
+      6,
+      79,
+      7,
+      79,
+    ],
+    [
+      8,
+      80,
+      9,
+      80,
+    ],
+    [
+      10,
+      81,
+      11,
+      81,
+    ],
+  ],
+]
+comment = "All records match"
+expected = 5

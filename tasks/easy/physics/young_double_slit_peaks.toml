@@ -1,0 +1,120 @@
+level             = "easy"
+name              = "young_double_slit_peaks"
+tags              = ["physics", "experiments", "arrays"]
+time_to_solve_sec = 260
+
+description_en = """
+In Young's double-slit experiment, bright fringes appear as local intensity maxima.
+
+Given screen intensities, count positions that are strictly brighter than every existing neighbor.
+A single reading counts as one bright fringe.
+"""
+
+description_ru = """
+В опыте Юнга с двумя щелями яркие полосы выглядят как локальные максимумы интенсивности.
+
+Даны интенсивности на экране. Посчитайте позиции, которые строго ярче всех существующих соседей.
+Одинственное измерение считается одной яркой полосой.
+"""
+
+limits = """
+- $0 \\leq \\text{len}(\\text{intensities}) \\leq 100$
+- $0 \\leq \\text{intensity} \\leq 10^4$
+"""
+
+solution = """
+def solution(intensities):
+    n = len(intensities)
+    return sum((i == 0 or intensities[i] > intensities[i - 1]) and (i == n - 1 or intensities[i] > intensities[i + 1]) for i in range(n))
+"""
+
+examples = """
+solution([]) == 0
+solution([7]) == 1
+solution([1, 3, 1, 4, 2]) == 2
+"""
+
+[[input_signature]]
+argument_name = "intensities"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "integer"
+
+[output_signature.type]
+name = "integer"
+
+[[asserts]]
+arguments = [[]]
+comment   = "No readings"
+expected  = 0
+
+[[asserts]]
+arguments = [[7]]
+comment   = "Single reading"
+expected  = 1
+
+[[asserts]]
+arguments = [[1, 2]]
+comment   = "Right endpoint peak"
+expected  = 1
+
+[[asserts]]
+arguments = [[2, 1]]
+comment   = "Left endpoint peak"
+expected  = 1
+
+[[asserts]]
+arguments = [[2, 2]]
+comment   = "Equal neighbors are not peaks"
+expected  = 0
+
+[[asserts]]
+arguments = [[1, 3, 1]]
+comment   = "One central peak"
+expected  = 1
+
+[[asserts]]
+arguments = [[3, 1, 3]]
+comment   = "Both endpoints are peaks"
+expected  = 2
+
+[[asserts]]
+arguments = [[1, 3, 1, 4, 2]]
+comment   = "Two bright fringes"
+expected  = 2
+
+[[asserts]]
+arguments = [[1, 2, 3, 4]]
+comment   = "Increasing profile"
+expected  = 1
+
+[[asserts]]
+arguments = [[4, 3, 2, 1]]
+comment   = "Decreasing profile"
+expected  = 1
+
+[[asserts]]
+arguments = [[1, 3, 3, 1]]
+comment   = "Plateau is not strict"
+expected  = 0
+
+[[asserts]]
+arguments = [[0, 10, 0, 10, 0, 10, 0]]
+comment   = "Alternating fringes"
+expected  = 3
+
+[[asserts]]
+arguments = [[5, 1, 5, 1, 5]]
+comment   = "Endpoint and center peaks"
+expected  = 3
+
+[[asserts]]
+arguments = [[1, 5, 2, 2, 6, 1]]
+comment   = "Flat shoulder near a peak"
+expected  = 2
+
+[[asserts]]
+arguments = [[9, 9, 8, 7, 8, 9, 9]]
+comment   = "Endpoint plateaus fail strictness"
+expected  = 0

@@ -1,0 +1,127 @@
+level             = "easy"
+name              = "millikan_electron_count"
+tags              = ["physics", "experiments", "arrays"]
+time_to_solve_sec = 260
+
+description_en = """
+In Millikan's oil-drop experiment, measured droplet charges are close to multiples of the elementary charge.
+
+Given droplet charges and the elementary charge in the same units, return the nearest electron count for each droplet.
+If a charge is exactly halfway between two counts, choose the larger count.
+"""
+
+description_ru = """
+В опыте Милликена заряды капель близки к кратным элементарному заряду.
+
+Даны заряды капель и элементарный заряд в одинаковых единицах. Верните ближайшее число электронов для каждой капли.
+Если заряд ровно посередине между двумя числами, выберите большее число.
+"""
+
+limits = """
+- $0 \\leq \\text{len}(\\text{charges}) \\leq 100$
+- $0 \\leq \\text{charge} \\leq 10^6$
+- $1 \\leq \\text{elementary\\_charge} \\leq 10^4$
+"""
+
+solution = """
+def solution(charges, elementary_charge):
+    return [(2 * q + elementary_charge) // (2 * elementary_charge) for q in charges]
+"""
+
+examples = """
+solution([], 5) == []
+solution([10], 5) == [2]
+solution([4, 5, 8, 13], 5) == [1, 1, 2, 3]
+"""
+
+[[input_signature]]
+argument_name = "charges"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "integer"
+
+[[input_signature]]
+argument_name = "elementary_charge"
+[input_signature.type]
+name = "integer"
+
+[output_signature.type]
+name = "array"
+[output_signature.type.nested]
+name = "integer"
+
+[[asserts]]
+arguments = [[], 5]
+comment   = "No droplets"
+expected  = []
+
+[[asserts]]
+arguments = [[0], 5]
+comment   = "Neutral droplet"
+expected  = [0]
+
+[[asserts]]
+arguments = [[10], 5]
+comment   = "Exact multiple"
+expected  = [2]
+
+[[asserts]]
+arguments = [[4], 5]
+comment   = "Rounds to one electron"
+expected  = [1]
+
+[[asserts]]
+arguments = [[2], 5]
+comment   = "Below half"
+expected  = [0]
+
+[[asserts]]
+arguments = [[3], 5]
+comment   = "Above half"
+expected  = [1]
+
+[[asserts]]
+arguments = [[5, 10, 15], 5]
+comment   = "Several exact multiples"
+expected  = [1, 2, 3]
+
+[[asserts]]
+arguments = [[4, 5, 8, 13], 5]
+comment   = "Noisy charges"
+expected  = [1, 1, 2, 3]
+
+[[asserts]]
+arguments = [[6, 14, 21, 29], 7]
+comment   = "Different elementary charge"
+expected  = [1, 2, 3, 4]
+
+[[asserts]]
+arguments = [[1, 2, 3, 4], 2]
+comment   = "Half values round upward"
+expected  = [1, 1, 2, 2]
+
+[[asserts]]
+arguments = [[99, 100, 101], 100]
+comment   = "Near one large unit"
+expected  = [1, 1, 1]
+
+[[asserts]]
+arguments = [[149, 150, 151], 100]
+comment   = "Halfway between one and two"
+expected  = [1, 2, 2]
+
+[[asserts]]
+arguments = [[10000, 20001, 34999], 10000]
+comment   = "Large measurements"
+expected  = [1, 2, 3]
+
+[[asserts]]
+arguments = [[7, 22, 37, 52], 15]
+comment   = "Repeated near half"
+expected  = [0, 1, 2, 3]
+
+[[asserts]]
+arguments = [[8, 23, 38, 53], 15]
+comment   = "Repeated just above half"
+expected  = [1, 2, 3, 4]

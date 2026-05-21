@@ -1,0 +1,125 @@
+level             = "medium"
+name              = "michelson_morley_shift"
+tags              = ["physics", "experiments", "arrays"]
+time_to_solve_sec = 360
+
+description_en = """
+In a simplified Michelson-Morley setup, two circular brightness profiles are measured before and after rotation.
+
+Return the smallest total absolute error between the first profile and any cyclic shift of the second profile.
+"""
+
+description_ru = """
+В упрощённом опыте Майкельсона-Морли два круговых профиля яркости измерены до и после поворота.
+
+Верните минимальную суммарную абсолютную ошибку между первым профилем и любым циклическим сдвигом второго профиля.
+"""
+
+limits = """
+- $1 \\leq \\text{len}(\\text{before}) = \\text{len}(\\text{after}) \\leq 50$
+- $0 \\leq \\text{brightness} \\leq 10^4$
+"""
+
+solution = """
+def solution(before, after):
+    n = len(before)
+    return min(sum(abs(before[i] - after[(i + s) % n]) for i in range(n)) for s in range(n))
+"""
+
+examples = """
+solution([5], [8]) == 3
+solution([1, 2, 3], [2, 3, 1]) == 0
+solution([10, 20, 10, 20], [20, 10, 20, 11]) == 1
+"""
+
+[[input_signature]]
+argument_name = "before"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "integer"
+
+[[input_signature]]
+argument_name = "after"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "integer"
+
+[output_signature.type]
+name = "integer"
+
+[[asserts]]
+arguments = [[5], [8]]
+comment   = "Single measurement"
+expected  = 3
+
+[[asserts]]
+arguments = [[1, 2, 3], [1, 2, 3]]
+comment   = "Identical profiles"
+expected  = 0
+
+[[asserts]]
+arguments = [[1, 2, 3], [2, 3, 1]]
+comment   = "Perfect cyclic shift"
+expected  = 0
+
+[[asserts]]
+arguments = [[1, 2, 3], [3, 1, 2]]
+comment   = "Perfect reverse shift direction"
+expected  = 0
+
+[[asserts]]
+arguments = [[1, 2, 3], [3, 2, 1]]
+comment   = "No perfect shift"
+expected  = 2
+
+[[asserts]]
+arguments = [[10, 20, 10, 20], [20, 10, 20, 11]]
+comment   = "Nearly shifted profile"
+expected  = 1
+
+[[asserts]]
+arguments = [[0, 0, 10, 10], [10, 0, 0, 10]]
+comment   = "Perfect square wave shift"
+expected  = 0
+
+[[asserts]]
+arguments = [[0, 5, 10, 5], [5, 10, 5, 1]]
+comment   = "One shifted value is noisy"
+expected  = 1
+
+[[asserts]]
+arguments = [[4, 8, 12, 16, 20], [12, 16, 20, 4, 8]]
+comment   = "Five-point perfect shift"
+expected  = 0
+
+[[asserts]]
+arguments = [[4, 8, 12, 16, 20], [12, 16, 20, 4, 9]]
+comment   = "Five-point noisy shift"
+expected  = 1
+
+[[asserts]]
+arguments = [[100, 200, 300], [110, 210, 310]]
+comment   = "Uniform offset"
+expected  = 30
+
+[[asserts]]
+arguments = [[1, 100, 1, 100], [100, 2, 100, 2]]
+comment   = "Alternating profile with error"
+expected  = 2
+
+[[asserts]]
+arguments = [[7, 7, 7, 7], [1, 2, 3, 4]]
+comment   = "Flat reference profile"
+expected  = 18
+
+[[asserts]]
+arguments = [[0, 10000], [10000, 0]]
+comment   = "Extreme perfect half-turn"
+expected  = 0
+
+[[asserts]]
+arguments = [[3, 1, 4, 1, 5, 9], [4, 1, 5, 9, 3, 2]]
+comment   = "Noisy six-point profile"
+expected  = 1

@@ -1,0 +1,129 @@
+level             = "easy"
+name              = "geiger_counter_spikes"
+tags              = ["physics", "experiments", "arrays"]
+time_to_solve_sec = 220
+
+description_en = """
+A Geiger counter records background radiation and occasional spikes.
+
+Given the background level, multiplier `k`, and measurements, count readings at least `background * k`.
+"""
+
+description_ru = """
+Счётчик Гейгера фиксирует фоновое излучение и отдельные всплески.
+
+Даны фоновый уровень, множитель `k` и измерения. Посчитайте значения не меньше `background * k`.
+"""
+
+limits = """
+- $0 \\leq \\text{len}(\\text{measurements}) \\leq 100$
+- $0 \\leq \\text{background} \\leq 10^4$
+- $0 \\leq k \\leq 10^4$
+- $0 \\leq \\text{measurement} \\leq 10^8$
+"""
+
+solution = """
+def solution(background, k, measurements):
+    return sum(x >= background * k for x in measurements)
+"""
+
+examples = """
+solution(5, 2, []) == 0
+solution(5, 2, [9, 10, 11]) == 2
+solution(3, 3, [1, 9, 8, 12]) == 2
+"""
+
+[[input_signature]]
+argument_name = "background"
+[input_signature.type]
+name = "integer"
+
+[[input_signature]]
+argument_name = "k"
+[input_signature.type]
+name = "integer"
+
+[[input_signature]]
+argument_name = "measurements"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "integer"
+
+[output_signature.type]
+name = "integer"
+
+[[asserts]]
+arguments = [5, 2, []]
+comment   = "No measurements"
+expected  = 0
+
+[[asserts]]
+arguments = [5, 2, [9]]
+comment   = "Below spike threshold"
+expected  = 0
+
+[[asserts]]
+arguments = [5, 2, [10]]
+comment   = "Exactly at spike threshold"
+expected  = 1
+
+[[asserts]]
+arguments = [5, 2, [11]]
+comment   = "Above spike threshold"
+expected  = 1
+
+[[asserts]]
+arguments = [5, 2, [9, 10, 11]]
+comment   = "Mixed around threshold"
+expected  = 2
+
+[[asserts]]
+arguments = [3, 3, [1, 9, 8, 12]]
+comment   = "Different multiplier"
+expected  = 2
+
+[[asserts]]
+arguments = [0, 5, [0, 1, 2]]
+comment   = "Zero background"
+expected  = 3
+
+[[asserts]]
+arguments = [10, 0, [0, 1, 100]]
+comment   = "Zero multiplier"
+expected  = 3
+
+[[asserts]]
+arguments = [10, 10, [99, 100, 101, 1000]]
+comment   = "Large threshold"
+expected  = 3
+
+[[asserts]]
+arguments = [1, 100, [99, 100, 101]]
+comment   = "Large multiplier"
+expected  = 2
+
+[[asserts]]
+arguments = [7, 4, [28, 27, 29, 14, 56]]
+comment   = "Several spikes"
+expected  = 3
+
+[[asserts]]
+arguments = [2, 5, [1, 2, 3, 4, 5]]
+comment   = "No spike in low sample"
+expected  = 0
+
+[[asserts]]
+arguments = [2, 5, [10, 10, 10]]
+comment   = "All at threshold"
+expected  = 3
+
+[[asserts]]
+arguments = [4, 3, [12, 8, 16, 4, 20, 11]]
+comment   = "Alternating spikes"
+expected  = 3
+
+[[asserts]]
+arguments = [10000, 10000, [99999999, 100000000]]
+comment   = "Extreme product"
+expected  = 1

@@ -1,0 +1,17 @@
+{
+  "name": "masters_s1_2026_2",
+  "task_names": [
+    "galileo_fall_matches",
+    "rutherford_scatter_summary",
+    "higgs_candidate_events",
+    "young_double_slit_peaks",
+    "photoelectric_threshold",
+    "millikan_electron_count",
+    "stern_gerlach_split",
+    "cosmic_microwave_map",
+    "geiger_counter_spikes",
+    "cloud_chamber_longest_track",
+    "michelson_morley_shift",
+    "particle_decay_chain"
+  ]
+}

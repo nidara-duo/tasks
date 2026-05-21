@@ -1,0 +1,121 @@
+level             = "easy"
+name              = "cosmic_microwave_map"
+tags              = ["physics", "experiments", "arrays"]
+time_to_solve_sec = 240
+
+description_en = """
+A cosmic microwave background map stores integer temperature deviations.
+
+Return the spread between the hottest and coldest measured points.
+"""
+
+description_ru = """
+Карта реликтового излучения хранит целые отклонения температуры.
+
+Верните разброс между самой горячей и самой холодной измеренной точкой.
+"""
+
+limits = """
+- $1 \\leq \\text{len}(\\text{temperature\\_map}) \\leq 20$
+- $1 \\leq \\text{len}(\\text{row}) \\leq 20$
+- $-10^4 \\leq \\text{temperature} \\leq 10^4$
+"""
+
+solution = """
+def solution(temperature_map):
+    a = [x for row in temperature_map for x in row]
+    return max(a) - min(a)
+"""
+
+examples = """
+solution([[5]]) == 0
+solution([[1, 2], [3, 4]]) == 3
+solution([[-2, 7, 1], [4, -5, 3]]) == 12
+"""
+
+[[input_signature]]
+argument_name = "temperature_map"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "array"
+[input_signature.type.nested.nested]
+name = "integer"
+
+[output_signature.type]
+name = "integer"
+
+[[asserts]]
+arguments = [[[5]]]
+comment   = "Single cell"
+expected  = 0
+
+[[asserts]]
+arguments = [[[1, 2], [3, 4]]]
+comment   = "Small positive map"
+expected  = 3
+
+[[asserts]]
+arguments = [[[-2, 7, 1], [4, -5, 3]]]
+comment   = "Positive and negative deviations"
+expected  = 12
+
+[[asserts]]
+arguments = [[[0, 0], [0, 0]]]
+comment   = "Uniform map"
+expected  = 0
+
+[[asserts]]
+arguments = [[[-10, -7], [-3, -1]]]
+comment   = "Only negative deviations"
+expected  = 9
+
+[[asserts]]
+arguments = [[[10, 7, 3, 1]]]
+comment   = "Single row"
+expected  = 9
+
+[[asserts]]
+arguments = [[[3], [9], [-1], [4]]]
+comment   = "Single column"
+expected  = 10
+
+[[asserts]]
+arguments = [[[10000, -10000]]]
+comment   = "Extreme range"
+expected  = 20000
+
+[[asserts]]
+arguments = [[[5, 5, 5], [5, 6, 5], [5, 5, 5]]]
+comment   = "One hot spot"
+expected  = 1
+
+[[asserts]]
+arguments = [[[5, 5, 5], [5, -6, 5], [5, 5, 5]]]
+comment   = "One cold spot"
+expected  = 11
+
+[[asserts]]
+arguments = [[[1, -1, 2], [-2, 3, -3], [4, -4, 0]]]
+comment   = "Checkerboard deviations"
+expected  = 8
+
+[[asserts]]
+arguments = [[[9, 8, 7], [6, 5, 4], [3, 2, 1]]]
+comment   = "Descending map"
+expected  = 8
+
+[[asserts]]
+arguments = [[[-9, 8, -7], [6, -5, 4]]]
+comment   = "Alternating signs"
+expected  = 17
+
+[[asserts]]
+arguments = [[[12, 12], [12, -12], [0, 6]]]
+comment   = "Repeated hottest values"
+expected  = 24
+
+[[asserts]]
+arguments = [[[2, 3, 5], [7, 11, 13], [17, 19, 23]]]
+comment   = "Prime-valued map"
+expected  = 21

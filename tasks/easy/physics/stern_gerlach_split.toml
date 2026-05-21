@@ -1,0 +1,115 @@
+level             = "easy"
+name              = "stern_gerlach_split"
+tags              = ["physics", "experiments", "strings"]
+time_to_solve_sec = 200
+
+description_en = """
+In the Stern-Gerlach experiment, atoms split into `U` and `D` beams.
+
+Given a string of beam results, return the absolute difference between the two beam counts.
+"""
+
+description_ru = """
+В опыте Штерна-Герлаха атомы разделяются на пучки `U` и `D`.
+
+Дана строка результатов. Верните абсолютную разницу между количествами в двух пучках.
+"""
+
+limits = """
+- $0 \\leq \\text{len}(\\text{results}) \\leq 100$
+- $\\text{results} \\in \\{U, D\\}^*$
+"""
+
+solution = """
+def solution(results):
+    return abs(results.count("U") - results.count("D"))
+"""
+
+examples = """
+solution("") == 0
+solution("U") == 1
+solution("UUDDUD") == 0
+"""
+
+[[input_signature]]
+argument_name = "results"
+[input_signature.type]
+name = "string"
+
+[output_signature.type]
+name = "integer"
+
+[[asserts]]
+arguments = [""]
+comment   = "No atoms"
+expected  = 0
+
+[[asserts]]
+arguments = ["U"]
+comment   = "Single up result"
+expected  = 1
+
+[[asserts]]
+arguments = ["D"]
+comment   = "Single down result"
+expected  = 1
+
+[[asserts]]
+arguments = ["UD"]
+comment   = "Balanced pair"
+expected  = 0
+
+[[asserts]]
+arguments = ["UU"]
+comment   = "Two up results"
+expected  = 2
+
+[[asserts]]
+arguments = ["DD"]
+comment   = "Two down results"
+expected  = 2
+
+[[asserts]]
+arguments = ["UUDDUD"]
+comment   = "Balanced sample"
+expected  = 0
+
+[[asserts]]
+arguments = ["UUUDD"]
+comment   = "One extra up"
+expected  = 1
+
+[[asserts]]
+arguments = ["UDDDD"]
+comment   = "Down beam dominates"
+expected  = 3
+
+[[asserts]]
+arguments = ["UUUUUD"]
+comment   = "Up beam dominates"
+expected  = 4
+
+[[asserts]]
+arguments = ["DUDUDUDU"]
+comment   = "Alternating balanced results"
+expected  = 0
+
+[[asserts]]
+arguments = ["UDUDUDU"]
+comment   = "Alternating one extra up"
+expected  = 1
+
+[[asserts]]
+arguments = ["DDDUUUUD"]
+comment   = "Late up recovery"
+expected  = 0
+
+[[asserts]]
+arguments = ["UUUDDDDDDU"]
+comment   = "Larger imbalance"
+expected  = 2
+
+[[asserts]]
+arguments = ["UUUUUUUUUU"]
+comment   = "All up"
+expected  = 10

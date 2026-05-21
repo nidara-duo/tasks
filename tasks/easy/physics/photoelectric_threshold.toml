@@ -1,0 +1,123 @@
+level             = "easy"
+name              = "photoelectric_threshold"
+tags              = ["physics", "experiments", "arrays"]
+time_to_solve_sec = 220
+
+description_en = """
+In the photoelectric effect, a photon ejects an electron only if its energy reaches the metal work function.
+
+Given photon energies and the work function, return how many photons can eject electrons.
+"""
+
+description_ru = """
+В фотоэффекте фотон выбивает электрон только тогда, когда его энергия достигает работы выхода металла.
+
+Даны энергии фотонов и работа выхода. Верните количество фотонов, способных выбить электроны.
+"""
+
+limits = """
+- $0 \\leq \\text{len}(\\text{energies}) \\leq 100$
+- $0 \\leq \\text{energy} \\leq 10^4$
+- $0 \\leq \\text{work\\_function} \\leq 10^4$
+"""
+
+solution = """
+def solution(energies, work_function):
+    return sum(e >= work_function for e in energies)
+"""
+
+examples = """
+solution([], 5) == 0
+solution([5], 5) == 1
+solution([2, 5, 7, 1], 5) == 2
+"""
+
+[[input_signature]]
+argument_name = "energies"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "integer"
+
+[[input_signature]]
+argument_name = "work_function"
+[input_signature.type]
+name = "integer"
+
+[output_signature.type]
+name = "integer"
+
+[[asserts]]
+arguments = [[], 5]
+comment   = "No photons"
+expected  = 0
+
+[[asserts]]
+arguments = [[5], 5]
+comment   = "Exactly at threshold"
+expected  = 1
+
+[[asserts]]
+arguments = [[4], 5]
+comment   = "Below threshold"
+expected  = 0
+
+[[asserts]]
+arguments = [[6], 5]
+comment   = "Above threshold"
+expected  = 1
+
+[[asserts]]
+arguments = [[2, 5, 7, 1], 5]
+comment   = "Mixed photon energies"
+expected  = 2
+
+[[asserts]]
+arguments = [[0, 0, 0], 0]
+comment   = "Zero work function"
+expected  = 3
+
+[[asserts]]
+arguments = [[1, 2, 3], 10]
+comment   = "No energetic photons"
+expected  = 0
+
+[[asserts]]
+arguments = [[10, 20, 30], 10]
+comment   = "All photons eject electrons"
+expected  = 3
+
+[[asserts]]
+arguments = [[3, 3, 3, 3], 3]
+comment   = "Repeated threshold hits"
+expected  = 4
+
+[[asserts]]
+arguments = [[3, 4, 5, 6, 7], 5]
+comment   = "Increasing energies"
+expected  = 3
+
+[[asserts]]
+arguments = [[7, 6, 5, 4, 3], 5]
+comment   = "Decreasing energies"
+expected  = 3
+
+[[asserts]]
+arguments = [[10000, 9999, 1, 0], 10000]
+comment   = "Upper edge energy"
+expected  = 1
+
+[[asserts]]
+arguments = [[8, 1, 8, 2, 8, 3], 8]
+comment   = "Alternating signal"
+expected  = 3
+
+[[asserts]]
+arguments = [[11, 12, 9, 8, 13, 7], 10]
+comment   = "Detector sample"
+expected  = 3
+
+[[asserts]]
+arguments = [[4, 5, 4, 5, 4, 5], 5]
+comment   = "Repeated borderline photons"
+expected  = 3

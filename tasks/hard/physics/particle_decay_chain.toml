@@ -1,0 +1,307 @@
+level             = "hard"
+name              = "particle_decay_chain"
+tags              = ["physics", "experiments", "dfs"]
+time_to_solve_sec = 760
+
+description_en = """
+Particle decay rules are strings like `"Higgs->photon+photon"`.
+This means one `Higgs` particle may be replaced by one `photon` and another `photon`.
+
+Starting from `start`, apply any number of rules to any current particle.
+Return `true` if you can finish with exactly the particles from `target`.
+Order does not matter, but duplicates do. A particle with no rule simply remains stable.
+"""
+
+description_ru = """
+Правила распада частиц заданы строками вида `"Higgs->photon+photon"`.
+Это значит, что одну частицу `Higgs` можно заменить на две частицы `photon`.
+
+Начиная с `start`, применяйте любое число правил к любым текущим частицам.
+Верните `true`, если можно закончить ровно с частицами из `target`.
+Порядок не важен, но повторы важны. Частица без правила просто остаётся стабильной.
+"""
+
+limits = """
+- $0 \\leq \\text{len}(\\text{rules}) \\leq 30$
+- $1 \\leq \\text{len}(\\text{target}) \\leq 12$
+- $1 \\leq \\text{len}(\\text{particle}) \\leq 20$
+"""
+
+solution = """
+def solution(rules, start, target):
+    decays = {}
+    for rule in rules:
+        parent, children = rule.split("->")
+        decays.setdefault(parent, []).append(children.split("+"))
+    goal, seen = tuple(sorted(target)), set()
+    def can(state):
+        state = tuple(sorted(state))
+        if state == goal:
+            return True
+        if state in seen or len(state) > len(goal):
+            return False
+        seen.add(state)
+        for i, particle in enumerate(state):
+            for children in decays.get(particle, []):
+                if can(list(state[:i]) + children + list(state[i + 1:])):
+                    return True
+        return False
+    return can([start])
+"""
+
+examples = """
+solution([], "electron", ["electron"]) == True
+solution(["Higgs->photon+photon"], "Higgs", ["photon", "photon"]) == True
+solution(["A->B+C", "B->D+E"], "A", ["C", "D", "E"]) == True
+"""
+
+[[input_signature]]
+argument_name = "rules"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "string"
+
+[[input_signature]]
+argument_name = "start"
+[input_signature.type]
+name = "string"
+
+[[input_signature]]
+argument_name = "target"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "string"
+
+[output_signature.type]
+name = "boolean"
+
+[[asserts]]
+arguments = [[], "electron", ["electron"]]
+comment   = "Already stable target"
+expected  = true
+
+[[asserts]]
+arguments = [[], "muon", ["electron"]]
+comment   = "No rule can change the particle"
+expected  = false
+
+[[asserts]]
+arguments = [["Higgs->photon+photon"], "Higgs", ["photon", "photon"]]
+comment   = "Direct two-photon decay"
+expected  = true
+
+[[asserts]]
+arguments = [["Higgs->photon+photon"], "Higgs", ["photon"]]
+comment   = "Missing final particle"
+expected  = false
+
+[[asserts]]
+arguments = [["A->B+C", "B->D+E"], "A", ["C", "D", "E"]]
+comment   = "One child decays further"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+C", "B->D+E"], "A", ["B", "C"]]
+comment   = "Stopping before optional decay is allowed"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+C", "B->D+E"], "A", ["D", "E"]]
+comment   = "Stable sibling cannot vanish"
+expected  = false
+
+[[asserts]]
+arguments = [["A->B+C", "A->D+E"], "A", ["D", "E"]]
+comment   = "Choose one of several decay modes"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+C", "A->D+E"], "A", ["B", "E"]]
+comment   = "Cannot mix decay modes"
+expected  = false
+
+[[asserts]]
+arguments = [
+  [
+    "Z->muon+muon",
+    "muon->electron+neutrino",
+  ],
+  "Z",
+  [
+    "electron",
+    "electron",
+    "neutrino",
+    "neutrino",
+  ],
+]
+comment = "Both identical children decay"
+expected = true
+
+[[asserts]]
+arguments = [
+  [
+    "Z->muon+muon",
+    "muon->electron+neutrino",
+  ],
+  "Z",
+  [
+    "muon",
+    "electron",
+    "neutrino",
+  ],
+]
+comment = "Only one identical child decays"
+expected = true
+
+[[asserts]]
+arguments = [["P->Q+R", "Q->S+T", "R->U+V"], "P", ["S", "T", "U", "V"]]
+comment   = "Two branches decay"
+expected  = true
+
+[[asserts]]
+arguments = [["P->Q+R", "Q->S+T", "R->U+V"], "P", ["S", "T", "R"]]
+comment   = "One branch remains stable"
+expected  = true
+
+[[asserts]]
+arguments = [["P->Q+R", "Q->S+T", "R->U+V"], "P", ["S", "T", "U"]]
+comment   = "One particle missing"
+expected  = false
+
+[[asserts]]
+arguments = [["A->B+C", "B->A"], "A", ["A", "C"]]
+comment   = "Cycle can still reach target"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+C", "B->A"], "A", ["B", "C"]]
+comment   = "Stop before entering the cycle"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+C", "B->A"], "A", ["C", "C"]]
+comment   = "Cycle cannot create extra sibling"
+expected  = false
+
+[[asserts]]
+arguments = [["X->Y+Y", "Y->a+b", "Y->c+d"], "X", ["a", "b", "c", "d"]]
+comment   = "Identical parents choose different modes"
+expected  = true
+
+[[asserts]]
+arguments = [["X->Y+Y", "Y->a+b", "Y->c+d"], "X", ["a", "b", "a", "b"]]
+comment   = "Identical parents choose same mode"
+expected  = true
+
+[[asserts]]
+arguments = [["X->Y+Y", "Y->a+b", "Y->c+d"], "X", ["a", "b", "c"]]
+comment   = "Target has too few particles"
+expected  = false
+
+[[asserts]]
+arguments = [["A->B+C"], "A", ["C", "B"]]
+comment   = "Target order does not matter"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+C"], "A", ["B", "B"]]
+comment   = "Duplicate counts must match exactly"
+expected  = false
+
+[[asserts]]
+arguments = [["A->B", "B->C", "C->D+E"], "A", ["D", "E"]]
+comment   = "Single-child chain before final split"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B", "B->A"], "A", ["C"]]
+comment   = "Unreachable target behind a cycle"
+expected  = false
+
+[[asserts]]
+arguments = [["A->B+C", "B->D+E", "D->F+G"], "A", ["C", "E", "F", "G"]]
+comment   = "Deep decay inside one branch"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+C+D", "A->E+F"], "A", ["E", "F"]]
+comment   = "Skip an overgrown decay mode"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+C"], "A", ["A"]]
+comment   = "Particle may remain undecayed"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+B", "B->C"], "A", ["B", "C"]]
+comment   = "Only one repeated particle decays"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+B", "B->C"], "A", ["C", "C"]]
+comment   = "Both repeated particles decay"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+B", "B->C"], "A", ["B", "B", "C"]]
+comment   = "Extra duplicate cannot appear"
+expected  = false
+
+[[asserts]]
+arguments = [["A->B+C", "A->D", "D->B+C"], "A", ["B", "C"]]
+comment   = "Two different chains reach the same final pair"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+C", "B->D", "C->E", "A->D+E"], "A", ["D", "E"]]
+comment   = "Direct decay and two-branch chain both work"
+expected  = true
+
+[[asserts]]
+arguments = [["A->B+C", "B->D+E", "A->F+G", "F->D", "G->E"], "A", ["D", "E"]]
+comment   = "Choose longer valid chain over branch with extra particle"
+expected  = true
+
+[[asserts]]
+arguments = [
+  [
+    "R->A+B",
+    "R->C+D",
+    "A->electron+neutrino",
+    "B->muon+neutrino",
+    "C->electron+muon",
+    "D->neutrino+neutrino",
+  ],
+  "R",
+  [
+    "electron",
+    "muon",
+    "neutrino",
+    "neutrino",
+  ],
+]
+comment = "Two full decay histories produce the same multiset"
+expected = true
+
+[[asserts]]
+arguments = [
+  [
+    "R->A+B",
+    "R->C+D",
+    "A->electron+neutrino",
+    "B->muon",
+    "C->electron+muon",
+    "D->photon",
+  ],
+  "R",
+  [
+    "electron",
+    "muon",
+    "neutrino",
+  ],
+]
+comment = "Only one of several chains matches exactly"
+expected = true

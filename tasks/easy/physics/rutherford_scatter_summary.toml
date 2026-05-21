@@ -1,0 +1,126 @@
+level             = "easy"
+name              = "rutherford_scatter_summary"
+tags              = ["physics", "experiments", "arrays"]
+time_to_solve_sec = 240
+
+description_en = """
+In Rutherford scattering, alpha particles leave the foil at different angles.
+
+Given scattering angles in degrees, return `[forward, side, backscatter]`.
+Angles below `30` degrees are `forward`, angles up to `120` degrees are `side`,
+and larger angles are `backscatter`.
+"""
+
+description_ru = """
+В опыте Резерфорда альфа-частицы вылетают из фольги под разными углами.
+
+Даны углы рассеяния в градусах. Верните `[forward, side, backscatter]`.
+Углы меньше `30` градусов относятся к `forward`, углы до `120` градусов включительно — к `side`,
+а большие углы — к `backscatter`.
+"""
+
+limits = """
+- $0 \\leq \\text{len}(\\text{angles}) \\leq 100$
+- $0 \\leq \\text{angle} \\leq 180$
+"""
+
+solution = """
+def solution(angles):
+    r = [0, 0, 0]
+    for a in angles:
+        r[0 if a < 30 else 1 if a <= 120 else 2] += 1
+    return r
+"""
+
+examples = """
+solution([]) == [0, 0, 0]
+solution([0, 30, 121]) == [1, 1, 1]
+solution([5, 15, 60, 150]) == [2, 1, 1]
+"""
+
+[[input_signature]]
+argument_name = "angles"
+[input_signature.type]
+name = "array"
+[input_signature.type.nested]
+name = "integer"
+
+[output_signature.type]
+name = "array"
+[output_signature.type.nested]
+name = "integer"
+
+[[asserts]]
+arguments = [[]]
+comment   = "No particles"
+expected  = [0, 0, 0]
+
+[[asserts]]
+arguments = [[0]]
+comment   = "Perfectly forward"
+expected  = [1, 0, 0]
+
+[[asserts]]
+arguments = [[29]]
+comment   = "Forward boundary"
+expected  = [1, 0, 0]
+
+[[asserts]]
+arguments = [[30]]
+comment   = "Side lower boundary"
+expected  = [0, 1, 0]
+
+[[asserts]]
+arguments = [[120]]
+comment   = "Side upper boundary"
+expected  = [0, 1, 0]
+
+[[asserts]]
+arguments = [[121]]
+comment   = "Backscatter lower boundary"
+expected  = [0, 0, 1]
+
+[[asserts]]
+arguments = [[180]]
+comment   = "Direct backscatter"
+expected  = [0, 0, 1]
+
+[[asserts]]
+arguments = [[0, 10, 20, 29]]
+comment   = "Only forward particles"
+expected  = [4, 0, 0]
+
+[[asserts]]
+arguments = [[30, 45, 90, 120]]
+comment   = "Only side particles"
+expected  = [0, 4, 0]
+
+[[asserts]]
+arguments = [[121, 140, 160, 180]]
+comment   = "Only backscatter particles"
+expected  = [0, 0, 4]
+
+[[asserts]]
+arguments = [[5, 30, 121]]
+comment   = "One in each zone"
+expected  = [1, 1, 1]
+
+[[asserts]]
+arguments = [[1, 2, 35, 80, 119, 121, 179]]
+comment   = "Mixed distribution"
+expected  = [2, 3, 2]
+
+[[asserts]]
+arguments = [[29, 30, 120, 121, 0, 180]]
+comment   = "All boundaries together"
+expected  = [2, 2, 2]
+
+[[asserts]]
+arguments = [[12, 14, 16, 60, 61, 62, 150]]
+comment   = "Mostly small deflections"
+expected  = [3, 3, 1]
+
+[[asserts]]
+arguments = [[25, 75, 125, 175, 100, 50, 10, 130]]
+comment   = "Detector summary"
+expected  = [2, 3, 3]
